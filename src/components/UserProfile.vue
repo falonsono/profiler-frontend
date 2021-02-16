@@ -3,7 +3,7 @@
     <v-btn
       icon
       color="blue-grey"
-      @click="$router.push('/').catch(() => {})"
+      @click="backHome"
       v-if="!isLoading"
     >
       <v-icon>mdi-arrow-left</v-icon>
@@ -43,7 +43,7 @@
               <tbody>
                 <tr v-for="item in languages" :key="item.name">
                   <td>{{ item.name }}</td>
-                  <td style="width:80px">{{ ((item.count * 100) / totalRepos).toFixed(2) }}%</td>
+                  <td class="td-80">{{ ((item.count * 100) / totalRepos).toFixed(2) }}%</td>
                 </tr>
               </tbody>
             </template>
@@ -88,9 +88,9 @@
                   :key="item.id"
                   style="background-color: #ffffb9"
                 >
-                  <td style="width:20px;">{{ index + 1 }}</td>
+                  <td class="td-20">{{ index + 1 }}</td>
                   <td>{{ item.description }}</td>
-                  <td width="20" style="padding:0">
+                  <td class="td-20" style="padding:0">
                     <v-btn icon color="red" @click="removeNote(item.id)">
                       <v-icon x-small>mdi-close</v-icon>
                     </v-btn>
@@ -180,6 +180,9 @@ export default {
     },
   },
   methods: {
+    backHome(){
+      this.$router.push('/');
+    },
     removeNote(id) {
       this.$store.dispatch("deleteNote", id).then((response) => {
         console.log(response);
@@ -238,7 +241,7 @@ export default {
     getProfile() {
       this.initVariables();
 
-      var self = this;
+      let self = this;
       this.isLoading = true;
       this.$store.dispatch("getUser", this.username).then((response) => {
         if (response.status == 404) {
@@ -269,14 +272,14 @@ export default {
               );
 
               if (language) {
-                self.languages.find((x) => x.name == repo.language).count++;
+                self.languages.find((language) => language.name == repo.language).count++;
               } else {
                 self.languages.push({ name: repo.language, count: 1 });
               }
             } else {
               //language not set or unknown
-              if (self.languages.find((x) => x.name == "Unknown")) {
-                self.languages.find((x) => x.name == "Unknown").count++;
+              if (self.languages.find((language) => language.name == "Unknown")) {
+                self.languages.find((language) => language.name == "Unknown").count++;
               } else {
                 self.languages.push({ name: "Unknown", count: 1 });
               }
@@ -299,5 +302,11 @@ export default {
 <style scoped>
 .sidepanel p {
   line-height: 14px;
+}
+.td-20 {
+  width:20px;
+}
+.td-80{
+  width:80px;
 }
 </style>
